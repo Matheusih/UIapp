@@ -16,7 +16,7 @@ DiagramItem::DiagramItem(DiagramType diagramType, QMenu *contextMenu,QGraphicsIt
 {
     myDiagramType = diagramType;
     myContextMenu = contextMenu;
-    setSize(50, 100);
+
 
 
 
@@ -36,11 +36,13 @@ DiagramItem::DiagramItem(DiagramType diagramType, QMenu *contextMenu,QGraphicsIt
             myPolygon << QPointF(-50, 0) << QPointF(0, 50)
                       << QPointF(50, 0) << QPointF(0, -50)
                       << QPointF(-50, 0);
+            setSize(100,100);
             break;
         case Step:
             myPolygon << QPointF(-50, -25) << QPointF(50, -25)
                       << QPointF(50, 25) << QPointF(-50, 25)
                       << QPointF(-50, -25);
+            setSize(50, 100);
             break;
         default:
             myPolygon << QPointF(-120, -80) << QPointF(-70, 80)

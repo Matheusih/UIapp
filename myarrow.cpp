@@ -18,7 +18,7 @@ myArrow::myArrow(DiagramItem *item, arrowType arType){
             path.moveTo(temp.center() + QPoint(4,0));
             path.arcTo(temp, 0.0, 360.0);
             typePolygon = path.toFillPolygon();
-            type->setBrush(Qt::red);
+            type->setBrush(Qt::blue);
             break;
         case Square:
             typePolygon << QPointF(0,0)  << QPointF(8,0)
@@ -27,11 +27,17 @@ myArrow::myArrow(DiagramItem *item, arrowType arType){
             type->setBrush(Qt::green);
             break;
 
-        default:
-            typePolygon << QPointF(0,0)  << QPointF(8,0)
-                        << QPointF(8, 8) << QPointF(0,8)
-                        << QPointF(0,0);
-            type->setBrush(Qt::green);
+        case Triangle:
+            typePolygon << QPointF(4,0) << QPointF(8,8)
+                        << QPointF(0,8)
+                        << QPointF(4,0);
+            type->setBrush(Qt::red);
+            break;
+        case Cond:
+            typePolygon << QPointF(0,4) << QPointF(4,8)
+                        << QPointF(8,4) << QPointF(4,0)
+                        << QPointF(0,4);
+            type->setBrush(Qt::yellow);
             break;
     }
 

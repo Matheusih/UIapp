@@ -329,14 +329,16 @@ void MainWindow::addInput()
                    switch (buttongroup->checkedId())
                    {
                        case 1:
-                            printf("QRADIO 1 BOOL\n");
-                            x = myArrow::Square;
+                            x = myArrow::Circle;
                            break;
                        case 2:
-                           printf("QRADIO 2 INT\n");x = myArrow::Square;
+                           x = myArrow::Square;
                            break;
                        case 3:
-                           printf("QRadio 3 CHAR\n");x = myArrow::Square;
+                           x = myArrow::Triangle;
+                           break;
+                       case 4:
+                           x = myArrow::Cond;
                            break;
                        default:
                            break;
@@ -346,12 +348,11 @@ void MainWindow::addInput()
                    it->addMyArrow(arrow);
                    it->genInputPos();
 
-
+                   scene->addItem(arrow);
+                   scene->addItem(arrow->type);
                }
            }
        }
-    scene->addItem(arrow);
-    scene->addItem(arrow->type);
 }
 
 
@@ -359,9 +360,10 @@ QDialog* MainWindow::createPopupInput(QButtonGroup *buttongroup)
 {
     QDialog *diag = new QDialog(this);
     QLineEdit *lt = new QLineEdit();
-    QRadioButton *radio1 = new QRadioButton(tr("Bool"));
-    QRadioButton *radio2 = new QRadioButton(tr("Int"));
-    QRadioButton *radio3 = new QRadioButton(tr("Char"));
+    QRadioButton *radio1 = new QRadioButton(tr("Number"));
+    QRadioButton *radio2 = new QRadioButton(tr("String"));
+    QRadioButton *radio3 = new QRadioButton(tr("Image"));
+    QRadioButton *radio4 = new QRadioButton(tr("Boolean"));
 
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok
                                                        | QDialogButtonBox::Cancel);
@@ -373,9 +375,11 @@ QDialog* MainWindow::createPopupInput(QButtonGroup *buttongroup)
     mainLayout->addWidget(radio1);
     mainLayout->addWidget(radio2);
     mainLayout->addWidget(radio3);
+    mainLayout->addWidget(radio4);
     buttongroup->addButton(radio1); buttongroup->setId(radio1, 1);
     buttongroup->addButton(radio2); buttongroup->setId(radio2, 2);
     buttongroup->addButton(radio3); buttongroup->setId(radio3, 3);
+    buttongroup->addButton(radio4); buttongroup->setId(radio4, 4);
     radio1->setChecked(true);
     diag->setLayout(mainLayout);
     diag->setWindowTitle(tr("New input"));

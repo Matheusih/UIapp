@@ -15,7 +15,7 @@ class CustomRect;
 class myArrow : public QGraphicsPathItem
 {
 public:
-    enum arrowType {Circle, Square};
+    enum arrowType {Circle, Square, Triangle, Cond};
     myArrow(DiagramItem *item, arrowType arType = Circle);
     void updatePosition(QPointF p1, QPointF p2);
     QGraphicsPolygonItem *type;

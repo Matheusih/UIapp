@@ -3,13 +3,14 @@
 #include <QPainter>
 #include <cmath>
 
-myArrow::myArrow(QGraphicsPolygonItem *item, arrowType arType){
+myArrow::myArrow(QGraphicsPolygonItem *item, parentType ptype, arrowType arType){
     myitem = item;
     myType = arType;
+    parentObj = ptype;
     QPointF p = item->polygon().boundingRect().center();
     updatePosition(p /*- QPointF(0, 50)*/, p /*- QPointF(0, 250)*/);
     setFlag(QGraphicsLineItem::ItemIsSelectable);
-    type = new QGraphicsPolygonItem(QRectF(0,0,8,8));
+    artype = new QGraphicsPolygonItem(QRectF(0,0,8,8));
 
     QRectF temp(0,0,8,8);
     QPainterPath path;
@@ -18,31 +19,31 @@ myArrow::myArrow(QGraphicsPolygonItem *item, arrowType arType){
             path.moveTo(temp.center() + QPoint(4,0));
             path.arcTo(temp, 0.0, 360.0);
             typePolygon = path.toFillPolygon();
-            type->setBrush(Qt::blue);
+            artype->setBrush(Qt::blue);
             break;
         case Square:
             typePolygon << QPointF(0,0)  << QPointF(8,0)
                         << QPointF(8, 8) << QPointF(0,8)
                         << QPointF(0,0);
-            type->setBrush(Qt::green);
+            artype->setBrush(Qt::green);
             break;
 
         case Triangle:
             typePolygon << QPointF(4,0) << QPointF(8,8)
                         << QPointF(0,8)
                         << QPointF(4,0);
-            type->setBrush(Qt::red);
+            artype->setBrush(Qt::red);
             break;
         case Cond:
             typePolygon << QPointF(0,4) << QPointF(4,8)
                         << QPointF(8,4) << QPointF(4,0)
                         << QPointF(0,4);
-            type->setBrush(Qt::yellow);
+            artype->setBrush(Qt::yellow);
             break;
     }
 
 
-    type->setPolygon(typePolygon);
+    artype->setPolygon(typePolygon);
     //type->setBrush(Qt::green);
     setBrush(Qt::black);
 }

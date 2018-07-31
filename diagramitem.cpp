@@ -65,7 +65,7 @@ DiagramItem::DiagramItem(DiagramType diagramType, QMenu *contextMenu,QGraphicsIt
     label->setAttribute(Qt::WA_TranslucentBackground);
     pMyProxy->setWidget(label);
     setText(QString("Box"));
-    myoutput = new myArrow(this);
+    myoutput = new myArrow(this, myArrow::DiagramItem);
     //[1]
 }
 
@@ -77,10 +77,19 @@ void DiagramItem::removeArrow(Arrow *arrow)
         arrows.removeAt(index);
 }
 
+void DiagramItem::removeMyArrow(myArrow *arrow)
+{
+    int index = myarrows.indexOf(arrow);
+
+    if (index != -1)
+        myarrows.removeAt(index);
+}
+
+
 void DiagramItem::removeArrows()
 {
     foreach(myArrow *myarrow,myarrows){
-        scene()->removeItem(myarrow->type);
+        scene()->removeItem(myarrow->artype);
         scene()->removeItem(myarrow);
         delete myarrow;
     }
@@ -90,7 +99,7 @@ void DiagramItem::removeArrows()
         scene()->removeItem(arrow);
         delete arrow;
     }
-    scene()->removeItem(this->myoutput->type);
+    scene()->removeItem(this->myoutput->artype);
     scene()->removeItem(this->myoutput);
 }
 
@@ -155,7 +164,7 @@ QVariant DiagramItem::itemChange(GraphicsItemChange change, const QVariant &valu
 
             genInputPos();
             this->myoutput->updatePosition( p2 , p1 );
-            myoutput->type->setPos(midPoint);
+            myoutput->artype->setPos(midPoint);
             return newPos;
         }
 
@@ -165,7 +174,7 @@ QVariant DiagramItem::itemChange(GraphicsItemChange change, const QVariant &valu
 
 
         midPoint -= QPointF(4,10);
-        myoutput->type->setPos(midPoint);
+        myoutput->artype->setPos(midPoint);
 
         foreach (Arrow *arrow, arrows) {
             arrow->updatePosition();
@@ -185,11 +194,11 @@ void DiagramItem::genInputPos()
     int f = 0, ar = 0;
     float div, pos;
     if(myarrows.length() % 2 == 0 ){
-        div = floor(50 / myarrows.length());
+        div = floor(this->width / myarrows.length());
         ar = myarrows.length() / 2;
      }
     else if (myarrows.length() > 1){
-        div = floor(50 / (myarrows.length()-1));
+        div = floor(this->width / (myarrows.length()-1));
         f = 1;
         ar = (myarrows.length() - 1) / 2;
     }
@@ -206,7 +215,7 @@ void DiagramItem::genInputPos()
                 sp += QPointF(div,0);
             midPoint = (sp + (sp - QPointF(0,this->height))) / 2;
             midPoint -= QPointF(4,10);
-            myarrow->type->setPos(midPoint);
+            myarrow->artype->setPos(midPoint);
             myarrow->updatePosition(sp, sp - QPointF(0,this->height));
             sp += QPointF(div,0);
             ++i;
@@ -216,7 +225,7 @@ void DiagramItem::genInputPos()
         foreach(myArrow *myarrow, myarrows){
             midPoint = (sp + (sp - QPointF(0,this->height))) / 2;
             midPoint -= QPointF(4,10);
-            myarrow->type->setPos(midPoint);
+            myarrow->artype->setPos(midPoint);
             myarrow->updatePosition(sp, sp - QPointF(0,this->height));
             sp += QPointF(div,0);
             ++i;

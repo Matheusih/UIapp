@@ -16,14 +16,19 @@ class CustomRect;
 class myArrow : public QGraphicsPathItem
 {
 public:
+    enum { Type = UserType + 30 };
+    int type() const override { return Type;}
     enum arrowType {Circle, Square, Triangle, Cond};
-    myArrow(QGraphicsPolygonItem *item, arrowType arType = Circle);
+    enum parentType {DiagramItem , DiagramScene};
+    myArrow(QGraphicsPolygonItem *item, parentType ptype, arrowType arType = Circle);
     void updatePosition(QPointF p1, QPointF p2);
-    QGraphicsPolygonItem *type;
+    QGraphicsPolygonItem *artype;
     QPolygonF typePolygon;
-private:
+    parentType parentObj;
     QGraphicsPolygonItem *myitem;
+private:
     arrowType myType;
+
 };
 
 #endif // MYARROW_H

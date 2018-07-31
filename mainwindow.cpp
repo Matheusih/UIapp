@@ -98,6 +98,24 @@ void MainWindow::buttonGroupClicked(int id)
 void MainWindow::deleteItem()
 {
     foreach (QGraphicsItem *item, scene->selectedItems()) {
+        if(item->type() == myArrow::Type){
+            myArrow *myarrow = qgraphicsitem_cast<myArrow *>(item);
+            if(myarrow->parentObj == myArrow::DiagramScene){
+                scene->removeArrow(myarrow);
+                scene->genSceneInputPos();
+            }
+            else{
+                DiagramItem *myitem = qgraphicsitem_cast<DiagramItem *>(myarrow->myitem);
+                if(myarrow == myitem->myoutput)
+                    return;
+                myitem->removeMyArrow(myarrow);
+                myitem->genInputPos();
+            }
+            scene->removeItem(myarrow->artype);
+            scene->removeItem(myarrow);
+            delete item;
+            return;
+        }
         if (item->type() == Arrow::Type) {
             scene->removeItem(item);
             Arrow *arrow = qgraphicsitem_cast<Arrow *>(item);
@@ -109,7 +127,7 @@ void MainWindow::deleteItem()
 
     foreach (QGraphicsItem *item, scene->selectedItems()) {
          if (item->type() == DiagramItem::Type)
-             qgraphicsitem_cast<DiagramItem *>(item)->removeArrows();
+            qgraphicsitem_cast<DiagramItem *>(item)->removeArrows();
          scene->removeItem(item);
          delete item;
      }
@@ -339,10 +357,10 @@ void MainWindow::addInputScene()
                break;
        }
 
-       arrow = new myArrow(sceneRect, x);
+       arrow = new myArrow(sceneRect, myArrow::DiagramScene, x);
        scene->addArrowScene(arrow);
        scene->addItem(arrow);
-       scene->addItem(arrow->type);
+       scene->addItem(arrow->artype);
        scene->genSceneInputPos();
     }
 
@@ -384,12 +402,12 @@ void MainWindow::addInput()
                        break;
                }
 
-               arrow = new myArrow(it, x);
+               arrow = new myArrow(it, myArrow::DiagramItem, x);
                it->addMyArrow(arrow);
                it->genInputPos();
 
                scene->addItem(arrow);
-               scene->addItem(arrow->type);
+               scene->addItem(arrow->artype);
            }
        }
    }

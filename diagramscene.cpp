@@ -133,8 +133,8 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 
             addItem(item->myoutput);
 
-            addItem(item->myoutput->type);
-            item->myoutput->type->setPos(midPoint);
+            addItem(item->myoutput->artype);
+            item->myoutput->artype->setPos(midPoint);
 
             emit itemInserted(item);
             break;
@@ -252,7 +252,7 @@ void DiagramScene::genSceneInputPos()
                 sp += QPointF(div,0);
             midPoint = (sp + (sp - QPointF(0,100))) / 2;
             midPoint -= QPointF(4,10);
-            myarrow->type->setPos(midPoint);
+            myarrow->artype->setPos(midPoint);
             myarrow->updatePosition(sp, sp - QPointF(0,100));
             sp += QPointF(div,0);
             ++i;
@@ -262,10 +262,18 @@ void DiagramScene::genSceneInputPos()
         foreach(myArrow *myarrow, sceneArrows){
             midPoint = (sp + (sp - QPointF(0,100))) / 2;
             midPoint -= QPointF(4,10);
-            myarrow->type->setPos(midPoint);
+            myarrow->artype->setPos(midPoint);
             myarrow->updatePosition(sp, sp - QPointF(0,100));
             sp += QPointF(div,0);
             ++i;
         }
     }
+}
+
+void DiagramScene::removeArrow(myArrow *arrow)
+{
+    int index = sceneArrows.indexOf(arrow);
+
+    if (index != -1)
+        sceneArrows.removeAt(index);
 }

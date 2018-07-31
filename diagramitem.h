@@ -39,6 +39,7 @@ public:
     void addMyArrow(myArrow *arrow);
     QPixmap image() const;
     int type() const override { return Type;}
+    void removeMyArrow(myArrow *arrow);
 
     void setText(const QString & text);
     void genInputPos();

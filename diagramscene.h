@@ -33,6 +33,7 @@ public:
     void addArrowScene(myArrow *arrow);
     void genSceneInputPos();
     QColor getColor();
+    void removeArrow(myArrow *arrow);
 
 public slots:
     void setMode(Mode mode);

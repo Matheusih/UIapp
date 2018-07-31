@@ -25,12 +25,12 @@ DiagramScene::DiagramScene(QMenu *itemMenu,QMenu *sceneMenu ,QObject *parent)
     QPainterPath textPath;
     QFont timesFont("Times", 50);
     timesFont.setStyleStrategy(QFont::ForceOutline);
-    textPath.addText(10, 70, timesFont, tr("Home"));
+    //textPath.addText(10, 70, timesFont, tr("Home"));
     QGraphicsPathItem * test = new QGraphicsPathItem(textPath);
     test->setBrush(*radialGradient);
     test->setFlag(QGraphicsItem::ItemIsMovable);
     test->setPos(QPointF(0,0));
-    addItem(test);
+    //addItem(test);
 
 }
 
@@ -221,14 +221,51 @@ void DiagramScene::addArrowScene(myArrow *arrow){
 
 void DiagramScene::genSceneInputPos()
 {
+    int f = 0, ar = 0;
+    float div, pos;
+    QPointF p, q, midPoint;
+
+    p =  this->sceneRect().center() - QPointF(0,this->height()/2);
+    q = p - QPointF(0,100);
+    midPoint = (p+q)/2 - QPointF(4,0);
+
     if(sceneArrows.length() == 0)
         return;
+    if(sceneArrows.length() % 2 == 0 ){
+        div = floor(this->width() / sceneArrows.length());
+        ar = sceneArrows.length() / 2;
+     }
+    else if (sceneArrows.length() > 1){
+        div = floor(this->width() / (sceneArrows.length()-1));
+        f = 1;
+        ar = (sceneArrows.length() - 1) / 2;
+    }
 
-    QPointF p, q, midPoint;
-    p = sceneRect().topLeft();
-    q = p - QPointF(0,100);
+    int i = 0;
+    pos = floor(ar) * div;
 
-    foreach(myArrow *arrow, sceneArrows){
-        arrow->updatePosition(p,q);
+    QPointF sp = p - QPointF(pos,0);
+
+    if(!f){
+        foreach(myArrow *myarrow, sceneArrows){
+            if(i==ar && ar != 0)
+                sp += QPointF(div,0);
+            midPoint = (sp + (sp - QPointF(0,100))) / 2;
+            midPoint -= QPointF(4,10);
+            myarrow->type->setPos(midPoint);
+            myarrow->updatePosition(sp, sp - QPointF(0,100));
+            sp += QPointF(div,0);
+            ++i;
+        }
+    }
+    else{
+        foreach(myArrow *myarrow, sceneArrows){
+            midPoint = (sp + (sp - QPointF(0,100))) / 2;
+            midPoint -= QPointF(4,10);
+            myarrow->type->setPos(midPoint);
+            myarrow->updatePosition(sp, sp - QPointF(0,100));
+            sp += QPointF(div,0);
+            ++i;
+        }
     }
 }

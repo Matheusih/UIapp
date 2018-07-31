@@ -19,8 +19,8 @@ MainWindow::MainWindow()
 
     QMainWindow::setWindowTitle(tr("To be determined"));
 
-    scene = new DiagramScene(itemMenu, this);
-    scene->setSceneRect(QRectF(0, 0, 700, 700));
+    scene = new DiagramScene(itemMenu,sceneMenu, this);
+    scene->setSceneRect(QRectF(0, 0, 1200, 700));
 
 
     QPen mypen = QPen(Qt::red);
@@ -28,6 +28,7 @@ MainWindow::MainWindow()
 
     bound = new QRectF(scene->sceneRect().topLeft() , scene->sceneRect().bottomRight());
     scene->addRect(*bound,mypen,mybrush);
+
 
     connect(scene, SIGNAL(itemInserted(DiagramItem*)),
             this, SLOT(itemInserted(DiagramItem*)));
@@ -40,7 +41,8 @@ MainWindow::MainWindow()
     QHBoxLayout *layout = new QHBoxLayout;
     layout->addWidget(toolBox);
     view = new GraphicsView(scene);
-    DiagramScene *scene2 = new DiagramScene(itemMenu,this);
+
+    DiagramScene *scene2 = new DiagramScene(itemMenu,sceneMenu,this);
     GraphicsView *view2 = new GraphicsView(scene2);
     //layout->addWidget(view);
     //............................
@@ -307,6 +309,44 @@ void MainWindow::setItemLabel()
        }
 
 }
+void MainWindow::addInputScene()
+{
+
+    myArrow *arrow;
+    QPointF p;
+    QButtonGroup *buttongroup = new QButtonGroup(this);
+    QDialog *diag = createPopupInput(buttongroup);
+    QGraphicsPolygonItem *sceneRect = new QGraphicsPolygonItem(scene->sceneRect());
+
+    auto x = myArrow::Circle;
+
+    if(diag->exec() == QDialog::Accepted){
+       switch (buttongroup->checkedId())
+       {
+           case 1:
+                x = myArrow::Circle;
+               break;
+           case 2:
+               x = myArrow::Square;
+               break;
+           case 3:
+               x = myArrow::Triangle;
+               break;
+           case 4:
+               x = myArrow::Cond;
+               break;
+           default:
+               break;
+       }
+
+       arrow = new myArrow(sceneRect, x);
+       scene->addArrowScene(arrow);
+       scene->addItem(arrow);
+       scene->addItem(arrow->type);
+       scene->genSceneInputPos();
+    }
+
+}
 
 void MainWindow::addInput()
 {
@@ -314,45 +354,45 @@ void MainWindow::addInput()
     myArrow *arrow;
     QPointF p;
     if(!scene->selectedItems().isEmpty())
-       {
-           auto *item = scene->selectedItems().first();
-           DiagramItem *it = static_cast<DiagramItem *>(item);
-           if(it){
-               QButtonGroup *buttongroup = new QButtonGroup(this);
-               QDialog *diag = createPopupInput(buttongroup);
-               auto x = myArrow::Circle;
+    {
+       auto *item = scene->selectedItems().first();
+       DiagramItem *it = static_cast<DiagramItem *>(item);
+       if(it){
+           QButtonGroup *buttongroup = new QButtonGroup(this);
+           QDialog *diag = createPopupInput(buttongroup);
+           auto x = myArrow::Circle;
 
 
-               if(diag->exec() == QDialog::Accepted){
+           if(diag->exec() == QDialog::Accepted){
 
 
-                   switch (buttongroup->checkedId())
-                   {
-                       case 1:
-                            x = myArrow::Circle;
-                           break;
-                       case 2:
-                           x = myArrow::Square;
-                           break;
-                       case 3:
-                           x = myArrow::Triangle;
-                           break;
-                       case 4:
-                           x = myArrow::Cond;
-                           break;
-                       default:
-                           break;
-                   }
-
-                   arrow = new myArrow(it, x);
-                   it->addMyArrow(arrow);
-                   it->genInputPos();
-
-                   scene->addItem(arrow);
-                   scene->addItem(arrow->type);
+               switch (buttongroup->checkedId())
+               {
+                   case 1:
+                        x = myArrow::Circle;
+                       break;
+                   case 2:
+                       x = myArrow::Square;
+                       break;
+                   case 3:
+                       x = myArrow::Triangle;
+                       break;
+                   case 4:
+                       x = myArrow::Cond;
+                       break;
+                   default:
+                       break;
                }
+
+               arrow = new myArrow(it, x);
+               it->addMyArrow(arrow);
+               it->genInputPos();
+
+               scene->addItem(arrow);
+               scene->addItem(arrow->type);
            }
        }
+   }
 }
 
 
@@ -493,6 +533,10 @@ void MainWindow::createActions()
     aboutAction = new QAction(tr("A&bout"), this);
     aboutAction->setShortcut(tr("F1"));
     connect(aboutAction, SIGNAL(triggered()), this, SLOT(about()));
+
+    //Diagram Scene Actions
+    sceneInputAct = new QAction(tr("Add Input to Main"));
+    connect(sceneInputAct, SIGNAL(triggered()), this, SLOT(addInputScene()));
 }
 
 void MainWindow::createMenus()
@@ -510,6 +554,10 @@ void MainWindow::createMenus()
 
     aboutMenu = menuBar()->addMenu(tr("&Help"));
     aboutMenu->addAction(aboutAction);
+
+    sceneMenu = new QMenu(this);
+    sceneMenu->addAction(sceneInputAct);
+    //sceneMenu->addAction(sceneInputAct);
 }
 
 void MainWindow::createToolbars()
@@ -574,7 +622,7 @@ void MainWindow::createToolbars()
     QToolButton *pointerButton = new QToolButton;
     pointerButton->setCheckable(true);
     pointerButton->setChecked(true);
-    pointerButton->setIcon(QIcon(":/images/pointer.png"));
+    pointerButton->setIcon(QIcon(":/images/myimg.png"));
     QToolButton *linePointerButton = new QToolButton;
     linePointerButton->setCheckable(true);
     linePointerButton->setIcon(QIcon(":/images/linepointer.png"));

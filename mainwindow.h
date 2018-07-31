@@ -52,6 +52,7 @@ private slots:
 
     void setItemLabel();
     void addInput();
+    void addInputScene();
     QDialog* createPopupInput(QButtonGroup *buttongroup);
 
 private:
@@ -77,7 +78,8 @@ private:
     //myactions
     QAction *setLabelAction;
     QAction *addInputAct;
-
+    QAction *sceneInputAct;
+    //
     QAction *toFrontAction;
     QAction *sendBackAction;
     QAction *aboutAction;
@@ -85,6 +87,7 @@ private:
     QMenu *fileMenu;
     QMenu *itemMenu;
     QMenu *aboutMenu;
+    QMenu *sceneMenu;
 
     QToolBar *textToolBar;
     QToolBar *editToolBar;

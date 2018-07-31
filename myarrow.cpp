@@ -3,7 +3,7 @@
 #include <QPainter>
 #include <cmath>
 
-myArrow::myArrow(DiagramItem *item, arrowType arType){
+myArrow::myArrow(QGraphicsPolygonItem *item, arrowType arType){
     myitem = item;
     myType = arType;
     QPointF p = item->polygon().boundingRect().center();
@@ -46,6 +46,7 @@ myArrow::myArrow(DiagramItem *item, arrowType arType){
     //type->setBrush(Qt::green);
     setBrush(Qt::black);
 }
+
 
 void myArrow::updatePosition(QPointF p1, QPointF p2)
 {

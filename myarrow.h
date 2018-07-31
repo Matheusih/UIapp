@@ -5,6 +5,7 @@
 
 #include <QGraphicsLineItem>
 #include "diagramitem.h"
+#include "diagramscene.h"
 #include <QtWidgets>
 #include <QGraphicsPixmapItem>
 
@@ -16,12 +17,12 @@ class myArrow : public QGraphicsPathItem
 {
 public:
     enum arrowType {Circle, Square, Triangle, Cond};
-    myArrow(DiagramItem *item, arrowType arType = Circle);
+    myArrow(QGraphicsPolygonItem *item, arrowType arType = Circle);
     void updatePosition(QPointF p1, QPointF p2);
     QGraphicsPolygonItem *type;
     QPolygonF typePolygon;
 private:
-    DiagramItem *myitem;
+    QGraphicsPolygonItem *myitem;
     arrowType myType;
 };
 

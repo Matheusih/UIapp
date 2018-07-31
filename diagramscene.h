@@ -21,7 +21,7 @@ class DiagramScene : public QGraphicsScene
 public:
     enum Mode { InsertItem, InsertLine, InsertText, MoveItem };
 
-    explicit DiagramScene(QMenu *itemMenu, QObject *parent = 0);
+    explicit DiagramScene(QMenu *itemMenu,QMenu *sceneMenu ,QObject *parent = 0);
     QFont font() const { return myFont; }
     QColor textColor() const { return myTextColor; }
     QColor itemColor() const { return myItemColor; }
@@ -30,7 +30,10 @@ public:
     void setTextColor(const QColor &color);
     void setItemColor(const QColor &color);
     void setFont(const QFont &font);
+    void addArrowScene(myArrow *arrow);
+    void genSceneInputPos();
     QColor getColor();
+
 public slots:
     void setMode(Mode mode);
     void setItemType(DiagramItem::DiagramType type);
@@ -46,11 +49,14 @@ protected:
     void mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent) override;
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) override;
 
+
 private:
     bool isItemChange(int type);
 
     DiagramItem::DiagramType myItemType;
     QMenu *myItemMenu;
+    QMenu *mySceneMenu;
+
     Mode myMode;
     bool leftButtonDown;
     QPointF startPoint;
@@ -62,7 +68,7 @@ private:
     QColor myLineColor;
     QRadialGradient *radialGradient;
 
-    QRectF *bound;
+    QList<myArrow*> sceneArrows;
 };
 
 #endif // DIAGRAMSCENE_H

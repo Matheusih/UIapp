@@ -4,10 +4,11 @@
 #include <QTextCursor>
 #include <QGraphicsSceneMouseEvent>
 
-DiagramScene::DiagramScene(QMenu *itemMenu, QObject *parent)
+DiagramScene::DiagramScene(QMenu *itemMenu,QMenu *sceneMenu ,QObject *parent)
     : QGraphicsScene(parent)
 {
     myItemMenu = itemMenu;
+    mySceneMenu = sceneMenu;
     myMode = MoveItem;
     myItemType = DiagramItem::Step;
     line = 0;
@@ -30,6 +31,7 @@ DiagramScene::DiagramScene(QMenu *itemMenu, QObject *parent)
     test->setFlag(QGraphicsItem::ItemIsMovable);
     test->setPos(QPointF(0,0));
     addItem(test);
+
 }
 
 void DiagramScene::setLineColor(const QColor &color)
@@ -102,8 +104,12 @@ void DiagramScene::editorLostFocus(DiagramTextItem *item)
 
 void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
-    if (mouseEvent->button() != Qt::LeftButton)
+    if (mouseEvent->button() != Qt::LeftButton){
+        if(this->selectedItems().isEmpty())
+            mySceneMenu->exec(mouseEvent->screenPos());
         return;
+    }
+
 
     DiagramItem *item;
     //myArrow *output;
@@ -206,4 +212,23 @@ bool DiagramScene::isItemChange(int type)
             return true;
     }
     return false;
+}
+
+
+void DiagramScene::addArrowScene(myArrow *arrow){
+    sceneArrows.append(arrow);
+}
+
+void DiagramScene::genSceneInputPos()
+{
+    if(sceneArrows.length() == 0)
+        return;
+
+    QPointF p, q, midPoint;
+    p = sceneRect().topLeft();
+    q = p - QPointF(0,100);
+
+    foreach(myArrow *arrow, sceneArrows){
+        arrow->updatePosition(p,q);
+    }
 }
